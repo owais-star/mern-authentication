@@ -15,7 +15,8 @@ mongoose.connect("mongodb+srv://owais:dev@userdata.588jr.mongodb.net/dev", {
 })
 
 
-app.use(cors(["localhost:5000", "localhost:3000",]))
+// app.use(cors(["localhost:5000", "localhost:3000"]))
+app.use(cors())
 app.use(express.json())
 app.use('/', express.static(path.join(__dirname, '/web/build')))
 
@@ -37,13 +38,13 @@ app.post('/api/v1/login',(req, res) => {
                 if (user) {
                    const match = await bcrypt.compare(req.body.password , user.password)
                    if(match){
-                        res.status(200).send(`${user}`)
+                        res.send(user)
                         // res.send(user)
                    }else{
-                        res.status(400).send(`Entered password is incorrect`)
+                        res.send(`Entered password is incorrect`)
                    }
                 } else {
-                    res.status(500).send(`No user is found with this email`)
+                    res.send(`No user is found with this email`)
                 }
                 
              
@@ -60,13 +61,14 @@ app.post('/api/v1/registration', async (req, res) =>{
     try {
         const hashedPassword = await bcrypt.hash(req.body.password, 10)
         let newUser = {
-            name: req.body.name,
+            firstName: req.body.firstName,
+            lastName: req.body.lastName,
             email: req.body.email,
             password: hashedPassword
         }
         UsersModel.findOne({ email: newUser.email }, (error, user) => {
             if (user) {
-                return res.status(400).send(`User already registered. `);
+                return res.send(`User already registered.`);
             }else if (error){
                 return res.status(400).send(`${error.message}`);
             

@@ -10,7 +10,8 @@ const postSchema = new mongoose.Schema(
 
 const user = new schema(
 {
-    name: String,
+    firstName: String,
+    lastName: String,
     email: String,
     password: String,
     created_on: { type: Date, default: Date.now }
