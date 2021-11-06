@@ -2,8 +2,9 @@ import React from "react";
 import Signup from "./components/signup/Signup";
 import Login from "./components/login/login";
 import Dashboar from "./components/dashboard/Dashboard";
-import { useEffect, useContext } from "react"
+import NoMatch from "./Nomatch";
 import { GlobalContext } from './components/context/Context';
+import { useEffect, useContext } from "react"
 import axios from 'axios';
 import { baseUrl } from "./core";
 import Splash from './components/splash/Splash'
@@ -11,6 +12,7 @@ import {
 
   Switch,
   Route,
+  Redirect
 } from "react-router-dom";
 
 function App() {
@@ -52,7 +54,6 @@ function App() {
           <Route exact path="/">
             <Splash />
           </Route>
-          {/* <Redirect to="/" /> */}
         </Switch>
         : null}
 
@@ -60,8 +61,9 @@ function App() {
         <Switch>
           <Route exact path="/" component={Login} />
           <Route path="/signup" component={Signup} />
-
-          {/* <Redirect to="/" /> */}
+          <Route path="*">
+            <NoMatch />
+          </Route>
         </Switch> : null
       }
 
@@ -71,7 +73,7 @@ function App() {
             <Dashboar />
           </Route>
 
-          {/* <Redirect to="/" /> */}
+          <Redirect to="/" />
         </Switch>
         : null}
     </>

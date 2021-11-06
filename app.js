@@ -25,7 +25,7 @@ app.use(cors({
 }))
 
 app.use('/', express.static(path.join(__dirname, '/web/build')))
-app.get("/", (req, res, next) => {
+app.get("/**", (req, res, next) => {
     res.sendFile(path.join(__dirname, "./web/build/index.html"))
 })
 
