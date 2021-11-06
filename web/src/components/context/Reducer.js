@@ -5,7 +5,8 @@ export const reducer = (state, action) => {
         if (
           action.payload.firstName &&
           action.payload.lastName &&
-          action.payload.email) {
+          action.payload.email&&
+          action.payload._id) {
   
           return { ...state, user: action.payload }
   

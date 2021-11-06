@@ -1,6 +1,6 @@
 import * as Yup from 'yup';
 import { useState } from 'react';
-import { Link as RouterLink, useHistory } from 'react-router-dom';
+import { Link as RouterLink} from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -19,14 +19,12 @@ import {
   IconButton,
   InputAdornment,
   FormControlLabel,
-  getImageListItemBarUtilityClass
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
 export default function Login() {
-  const history = useHistory();
   const [messageBar, setMessageBar] = useState("")
   const [showPassword, setShowPassword] = useState();
   let { dispatch , state } = useContext(GlobalContext);
@@ -44,55 +42,46 @@ export default function Login() {
     },
     validationSchema: LoginSchema,
     onSubmit: (values) => {
-
-      console.log(values)
-      axios.post(`${baseUrl}/api/v1/login`, {
+      axios.post(`${baseUrl}/api/v1/login`,{
         email: values.email,
         password: values.password,
+      }
+      ,
+      {
+        withCredentials: true
       })
-        .then((response) => {
-          console.log(response.data);
-          if (response.data === "No user is found with this email"
-            || response.data === "Entered password is incorrect") {
+        .then((res) => {
+          console.log(res.data);
+          if (res.data === "No user is found with this email"
+            || res.data === "Entered password is incorrect") {
             setMessageBar(false)
             setTimeout(() => {
               setMessageBar("")
             }, 3000);
           } else {
+
             dispatch({
-            type: "USER_LOGIN",
-            payload: {
-              firstName: response.data.firstName,
-              lastName: response.data.lastName,
-              email: response.data.email,
-            },
-          });
+              type: "USER_LOGIN",
+              payload: {
+                firstName: res.data.firstName,
+                lastName: res.data.lastName,
+                email: res.data.email,
+                _id: res.data._id
+              }
+            })
             setMessageBar(true)
             setTimeout(() => {
-              history.push("/profile")
-            }, 1000);
-          
-          console.log(state.user);
+              setMessageBar("")
+            }, 2000);
           }
         })
         .catch((err) => {
           console.log(err);
         });
-      // if(values.email === user.email && values.password === user.password ){
-      //   setMessageBar(true)
-      //   setTimeout(() => {
-      //     history.push("/profile")
-      //   }, 1000);
-      // }else{
-      //   setMessageBar(false)
-      //   setTimeout(() => {
-      //     setMessageBar("")
-      //   }, 3000);
-      // }
     }
   });
 
-  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
+  const { errors, touched, values, handleSubmit, getFieldProps } = formik;
 
   const handleShowPassword = () => {
     setShowPassword((show) => !show);

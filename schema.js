@@ -4,7 +4,8 @@ const schema = mongoose.Schema;
 const postSchema = new mongoose.Schema(
 {
     title: String,
-    description: String,
+    email: String,
+    author: String,
     created_on: { type: Date, default: Date.now }
 });
 
